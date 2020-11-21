@@ -21,48 +21,45 @@ public class Main {
         Scanner keyboard = new Scanner(System.in);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String prompt = "";
-        boolean isValid = true;
+        boolean isValid = false;
 
         System.out.print("Enter the work ticket client ID:");
         clientId = keyboard.nextLine();
-
-        try
+        while(!isValid)
         {
-            do
+            try
             {
                 System.out.print("Enter the work ticket number:");
                 ticketNumber = keyboard.nextInt();
 
                 if(ticketNumber < 1)
                 {
-                    System.out.println("Error: You must enter a work ticket number greater than 0");
-                    keyboard.nextLine();
-                    isValid = false;
+                    throw new IllegalArgumentException("Work ticket number must be integer greater than 0");
                 }
-                else
+                keyboard.nextLine();
+
+                System.out.print("Enter the work ticket date(dd/MM/yyyy):");
+                String tempDate = keyboard.next();
+                date = LocalDate.parse(tempDate, dateFormat);
+                if(date.getYear() < MIN_DATE || date.getYear() > MAX_DATE)
                 {
-                    System.out.print("Enter the work ticket date:");
-                    prompt = keyboard.nextLine();
-                    date = LocalDate.parse(prompt, dateFormat);
-                    if(date.getYear() < MIN_DATE || date.getYear() > MAX_DATE)
-                    {
-                        throw new IllegalArgumentException(date.getYear() + " must be year between 2000 and 2099");
-                    }
-                    else
-                    {
-                        System.out.print("Enter the work ticket issue description:");
-                        prompt = keyboard.nextLine();
-                    }
+                    throw new IllegalArgumentException(date.getYear() + " must be year between 2000 and 2099");
                 }
+                keyboard.nextLine();
+
+                System.out.print("Enter the work ticket issue description:");
+                issueDescription = keyboard.nextLine();
+
+                isValid = true;
             }
-            while(!isValid);
+            catch(Exception ex)
+            {
+                System.out.println("Exception Error:" + ex );
+                keyboard.nextLine();
+                isValid = false;
+            }
         }
-        catch(DateTimeException |  IllegalArgumentException ex)
-        {
-            System.out.println("Date Error:");
-            keyboard.nextLine();
-            isValid = false;
-        }
+
 
         ticket.SetWorkTicket(ticketNumber, date, clientId, issueDescription);
         System.out.print(ticket.toString());

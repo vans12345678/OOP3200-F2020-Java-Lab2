@@ -23,12 +23,37 @@ public class WorkTicket
     public String getWorkTicketIssueDescription() { return workTicketIssueDescription; }
     public void setWorkTicketIssueDescription(String workTicketIssueDescription) { this.workTicketIssueDescription = workTicketIssueDescription; }
 
-    public void SetWorkTicket(int ticketNumber, LocalDate date, String clientId, String issueDescription)
+    public boolean SetWorkTicket(int workTicketNumber, LocalDate date, String clientID,  String issueDescription)
     {
-        this.workTicketNumber = ticketNumber;
-        this.workTicketDate = date;
-        this.workTicketClientID = clientId;
-        this.workTicketIssueDescription = issueDescription;
+        if (workTicketNumber >= 1) {
+            setWorkTicketNumber(workTicketNumber);
+            if (clientID.length() >= 1) {
+                setWorkTicketClientID(clientID);
+                if (date.getYear() >= 2000 && date.getYear() <=2099) {
+                    setWorkTicketDate(date);
+                    if (issueDescription.length() >= 1) {
+                        setWorkTicketIssueDescription(issueDescription);
+                        return true;
+                    }
+                    else {
+                        System.out.println("\nInvalid issue description");
+                        return false;
+                    }
+                }
+                else {
+                    System.out.println("\nERROR, Year is out of range, must be between 2000 and 2099");
+                    return false;
+                }
+            }
+            else {
+                System.out.println("\nInvalid clientID");
+                return false;
+            }
+        }
+        else {
+            System.out.println(" \nInvalid ticket number. Ticket number must be a whole, positive number");
+            return false;
+        }
     }
 
     //Constructors
